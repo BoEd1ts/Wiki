@@ -6,10 +6,7 @@ import com.lrvinglm.miki.resp.CommonResp;
 import com.lrvinglm.miki.resp.EbookQueryResp;
 import com.lrvinglm.miki.resp.PageResp;
 import com.lrvinglm.miki.service.EbookService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
@@ -32,6 +29,13 @@ public class EbookControl {
     public CommonResp save(@RequestBody EbookSaveReq req){
         CommonResp resp = new CommonResp();
         ebookService.save(req);
+        return resp;
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public CommonResp delete(@PathVariable long id){
+        CommonResp resp = new CommonResp();
+        ebookService.delete(id);
         return resp;
     }
 }

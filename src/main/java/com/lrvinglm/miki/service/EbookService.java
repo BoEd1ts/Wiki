@@ -21,6 +21,7 @@ import org.springframework.util.ObjectUtils;
 import javax.annotation.Resource;
 import java.util.List;
 
+
 @Service
 public class EbookService {
     @Resource
@@ -75,5 +76,14 @@ public class EbookService {
             //更新
             ebookMapper.updateByPrimaryKey(ebook);
         }
+    }
+
+    /**
+     * 删除
+     */
+    public void delete(Long id){
+        //删除指定id的数据
+        ebookMapper.deleteByPrimaryKey(id);
+
     }
 }
