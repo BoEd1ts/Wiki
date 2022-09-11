@@ -4,7 +4,26 @@
         :style="{ background: '#fff', padding: '24px', margin: 0, minHeight: '80px'  }"
     >
       <p>
-        <a-button type="primary" @click="add()" size="large">添加</a-button>
+        <a-form
+            layout="inline"
+            :model="param"
+        >
+          <a-form-item>
+            <a-input v-model:value="param.name" placeholder="名称">
+              <template #prefix><UserOutlined style="color: rgba(0, 0, 0, 0.25)" /></template>
+            </a-input>
+          </a-form-item>
+          <a-form-item>
+           <a-button type="primary" @click="handleQuery({page:1,size:pagination.pageSize})">
+             查询
+           </a-button>
+          </a-form-item>
+          <a-form-item>
+            <a-button type="primary" @click="add()" size="large">
+              添加
+            </a-button>
+          </a-form-item>
+        </a-form>
       </p>
       <!--列,key id,数据ebook,分页,等待框,分页执行方法-->
       <a-table
@@ -75,6 +94,7 @@
 <script lang="ts">
 import {defineComponent, onMounted, ref} from 'vue';//写上onMounted VUE3.0 setup集成了 导入ref 做响应式数据
 import axios from 'axios';
+import {message} from "ant-design-vue";
 
 export default defineComponent({
   name: 'AdminEbook',
@@ -84,7 +104,7 @@ export default defineComponent({
     const ebooks = ref();//响应式数据 获取的书籍实时反馈到页面上
     const pagination = ref({
       current: 1,//当前页
-      pageSize: 4,//分页条数
+      pageSize: 1001,//分页条数
       total: 0
     });
 
@@ -131,12 +151,17 @@ export default defineComponent({
       }).then((response) => {
         loading.value = false;
         const data = response.data;
+        if(data.success){
+
         console.log(data);
         ebooks.value = data.content.list;
 
         //重置分页按钮
         pagination.value.current = params.page;//点第二页的按钮的时候前端 不会刷新 还是第一页的地方 实际我们以及到第二页了
         pagination.value.total=data.content.total;
+        }else {
+          message.error(data.success);
+        }
       });
     };
     /**
@@ -212,11 +237,13 @@ export default defineComponent({
     });
 
     return {
+      param,
       ebooks,//表格
       pagination,
       columns,
       loading,
       handleTableChange,
+      handleQuery,
 
 
       edit,
