@@ -4,26 +4,23 @@
         :style="{ background: '#fff', padding: '24px', margin: 0, minHeight: '80px'  }"
     >
       <p>
-        <a-form
-            layout="inline"
-            :model="param"
-        >
+        <a-form layout="inline" :model="param">
           <a-form-item>
             <a-input v-model:value="param.name" placeholder="名称">
-              <template #prefix><UserOutlined style="color: rgba(0, 0, 0, 0.25)" /></template>
             </a-input>
           </a-form-item>
           <a-form-item>
-           <a-button type="primary" @click="handleQuery({page:1,size:pagination.pageSize})">
-             查询
-           </a-button>
+            <a-button type="primary" @click="handleQuery({page: 1, size: pagination.pageSize})">
+              查询
+            </a-button>
           </a-form-item>
           <a-form-item>
-            <a-button type="primary" @click="add()" size="large">
-              添加
+            <a-button type="primary" @click="add()">
+              新增
             </a-button>
           </a-form-item>
         </a-form>
+
       </p>
       <!--列,key id,数据ebook,分页,等待框,分页执行方法-->
       <a-table
@@ -147,6 +144,7 @@ export default defineComponent({
         params:{
           page:params.page,
           size:params.size,
+          name:param.value.name//增加按名字查询
         }
       }).then((response) => {
         loading.value = false;
@@ -240,13 +238,13 @@ export default defineComponent({
     });
 
     return {
-      param,
+      param,//增加按名字查询
       ebooks,//表格
       pagination,
       columns,
       loading,
       handleTableChange,
-      handleQuery,
+      handleQuery,//增加按名字查询
 
 
       edit,
