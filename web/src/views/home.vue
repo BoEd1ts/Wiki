@@ -102,7 +102,7 @@ export default defineComponent({
     const handleClick=() =>{
       console.log("menu click")
     };
-    onMounted(()=>{//页面加载完后的才执行的生命周期函数
+    onMounted(()=>{         //页面加载完后的才执行的生命周期函数
       handleQueryCategory();
       axios.get( "/ebook/list",{
         params:{
