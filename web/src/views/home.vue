@@ -8,10 +8,10 @@
           :openKeys="openKeys"
       >
         <a-menu-item key="welcome">
-          <router-link to="/">
+
           <MailOutlined/>
           <span>欢迎</span>
-          </router-link>
+
         </a-menu-item>
         <a-sub-menu v-for="item in level1" :key="item.id">
           <template v-slot:title>
@@ -28,9 +28,13 @@
       </a-menu>
 
     </a-layout-sider>
-    <a-layout-content
-        :style="{ background: '#fff', padding: '24px', margin: 0, minHeight: '280px' }">
-      <a-list item-layout="vertical" size="large" :grid="{gutter : 20,column : 3}"  :data-source="ebooks">
+    <a-layout-content :style="{ background: '#fff', padding: '24px', margin: 0, minHeight: '280px' }">
+
+      <div class="welcome" v-show="isShowWelcome">
+        <h1>欢迎使用知识库</h1>
+      </div>
+
+      <a-list v-show="!isShowWelcome" item-layout="vertical" size="large" :grid="{gutter : 20,column : 3}"  :data-source="ebooks">
         <template #renderItem="{ item }">
           <a-list-item key="item.title">
             <template #actions>
@@ -99,9 +103,22 @@ export default defineComponent({
         }
       });
     };
-    const handleClick=() =>{
-      console.log("menu click")
+
+    const isShowWelcome =ref(true);
+    const handleClick=(value:any) =>{
+     // console.log("menu click",value)
+
+    //   if (value.key==='welcome'){
+    //     isShowWelcome.value=true;
+    //   }else {
+    //     isShowWelcome.value=false;
+    //   }
+    // };
+      isShowWelcome.value = value.key === 'welcome';
     };
+
+
+
     onMounted(()=>{         //页面加载完后的才执行的生命周期函数
       handleQueryCategory();
       axios.get( "/ebook/list",{
@@ -136,6 +153,7 @@ export default defineComponent({
 
       handleClick,
       level1,
+      isShowWelcome
     }
   },
 
