@@ -31,12 +31,23 @@ public class CategoryService {
     private SnowFlake snowFlake;
     private final static Logger LOG = LoggerFactory.getLogger(LogAspect.class);
 
+    public List<CategoryQueryResp> all(){
+        CategoryExample categoryExample = new CategoryExample();
+        categoryExample.setOrderByClause("sort asc");
+        List<Category> categoryList = categoryMapper.selectByExample(categoryExample);
+
+
+        List<CategoryQueryResp> list = CopyUtil.copyList(categoryList, CategoryQueryResp.class);
+
+        return list;
+    }
     public PageResp<CategoryQueryResp> list(CategoryQueryReq req){
 
 
 
         //domain下的example mybaits自动生成了很多方法
         CategoryExample categoryExample = new CategoryExample();
+        categoryExample.setOrderByClause("sort asc");
         //当作where语句
         CategoryExample.Criteria criteria = categoryExample.createCriteria();
 //        if(!ObjectUtils.isEmpty(req.getName())){//不为空才执行
