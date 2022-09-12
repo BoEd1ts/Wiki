@@ -105,31 +105,42 @@ export default defineComponent({
     };
 
     const isShowWelcome =ref(true);
-    const handleClick=(value:any) =>{
-     // console.log("menu click",value)
+    let catrgory2Id = 0;
 
-    //   if (value.key==='welcome'){
-    //     isShowWelcome.value=true;
-    //   }else {
-    //     isShowWelcome.value=false;
-    //   }
-    // };
-      isShowWelcome.value = value.key === 'welcome';
-    };
-
-
-
-    onMounted(()=>{         //页面加载完后的才执行的生命周期函数
-      handleQueryCategory();
+    const handleQueryEbook=()=>{
       axios.get( "/ebook/list",{
         params:{
           page:1,
           size:1000,
+          catrgory2Id: catrgory2Id
         }
       }).then((response)=>{ //默认会有个参数 这个参数名是自个起的
         const data=response.data;//后端的commonResp的数据
         ebooks.value=data.content.list;
       });
+    };
+
+    const handleClick=(value:any) =>{
+     // console.log("menu click",value)
+
+      if (value.key==='welcome'){
+        isShowWelcome.value=true;
+      }else {
+        catrgory2Id= value.key
+        isShowWelcome.value=false;
+        handleQueryEbook();
+      }
+
+    //   isShowWelcome.value = value.key === 'welcome';
+    };
+
+
+
+
+    onMounted(()=>{         //页面加载完后的才执行的生命周期函数
+      handleQueryCategory();
+      // handleQueryEbook()
+
     });
 
     const pagination = {

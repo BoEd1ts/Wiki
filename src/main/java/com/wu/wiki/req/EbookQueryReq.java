@@ -2,14 +2,10 @@ package com.wu.wiki.req;
 
 public class EbookQueryReq extends PageReq{
     private Long id;
-
     private String name;
 
-
-
+    private Long catrgory2Id;
     private String description;
-
-
 
     public Long getId() {
         return id;
@@ -35,16 +31,21 @@ public class EbookQueryReq extends PageReq{
         this.description = description;
     }
 
+    public Long getCatrgory2Id() {
+        return catrgory2Id;
+    }
+
+    public void setCatrgory2Id(Long catrgory2Id) {
+        this.catrgory2Id = catrgory2Id;
+    }
+
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(getClass().getSimpleName());
-        sb.append(" [");
-        sb.append("Hash = ").append(hashCode());
-        sb.append(", id=").append(id);
-        sb.append(", name=").append(name);
-        sb.append(", description=").append(description);
-        sb.append("]");
-        return sb.toString();
+        return "EbookQueryReq{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", catrgory2Id=" + catrgory2Id +
+                ", description='" + description + '\'' +
+                "} " + super.toString();
     }
 }
