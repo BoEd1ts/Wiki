@@ -23,7 +23,7 @@
       <a-table
           :columns="columns"
           :row-key="record=>record.id"
-          :data-source="categorys"
+          :data-source="level1"
           :loading="loading"
           :pagination="false"
       >
@@ -114,6 +114,8 @@ export default defineComponent({
       }
     ];
 
+    const level1 = ref(); //一级分类树，children就是二级分类
+
     /**
      * 数据查询
      **/
@@ -126,6 +128,12 @@ export default defineComponent({
 
         console.log(data);
         categorys.value = data.content;
+        console.log("原始数组：",categorys.value);
+        level1.value=[];
+        level1.value=Tool.array2Tree(categorys.value,0);
+          console.log("树形结构：",level1);
+
+
         }else {
           message.error(data.success);
         }
@@ -190,7 +198,8 @@ export default defineComponent({
 
     return {
       param,//增加按名字查询
-      categorys,//表格
+      //categorys,//表格
+      level1,
       columns,
       loading,
       handleQuery,//增加按名字查询
