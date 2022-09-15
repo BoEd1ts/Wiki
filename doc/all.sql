@@ -65,7 +65,6 @@ insert into `category` (id, parent, name, sort) values(400,000,'开发工具',40
 insert into `category` (id, parent, name, sort) values(401,400,'其他',401);
 insert into `category` (id, parent, name, sort) values(402,400,'集成开发',402);
 
-
 #文档表
 drop table if exists `doc`;
 create table `doc`(
@@ -83,3 +82,4 @@ insert into `doc` (id,ebook_id,parent,name,sort,view_count,vote_count) values (1
 insert into `doc` (id,ebook_id,parent,name,sort,view_count,vote_count) values (2,1,1,'文档1.1',1,0,0);
 insert into `doc` (id,ebook_id,parent,name,sort,view_count,vote_count) values (3,1,0,'文档2',1,0,0);
 insert into `doc` (id,ebook_id,parent,name,sort,view_count,vote_count) values (4,1,3,'文档2.1',1,0,0);
+
