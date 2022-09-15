@@ -77,19 +77,19 @@
         </a-tree-select>
       </a-form-item>
       <!--下拉菜单-->
-      <a-form-item label="父分类">
-        <a-select
-            ref="select"
-            v-model:value="doc.parent"
-        >
-          <a-select-option value="0">
-            无
-          </a-select-option>
-          <a-select-option v-for="c in level1" :key="c.id" :value="c.id" :disabled="doc.id=== c.id"> <!--当前文本框里的这条数据的id和c.id相同则不能选-->
-            {{c.name}}
-          </a-select-option>
-        </a-select>
-      </a-form-item>
+<!--      <a-form-item label="父分类">-->
+<!--        <a-select-->
+<!--            ref="select"-->
+<!--            v-model:value="doc.parent"-->
+<!--        >-->
+<!--          <a-select-option value="0">-->
+<!--            无-->
+<!--          </a-select-option>-->
+<!--          <a-select-option v-for="c in level1" :key="c.id" :value="c.id" :disabled="doc.id=== c.id"> &lt;!&ndash;当前文本框里的这条数据的id和c.id相同则不能选&ndash;&gt;-->
+<!--            {{c.name}}-->
+<!--          </a-select-option>-->
+<!--        </a-select>-->
+<!--      </a-form-item>-->
       <a-form-item label="顺序">
         <a-input v-model:value="doc.sort"/>
       </a-form-item>
@@ -104,10 +104,19 @@ import {defineComponent, onMounted, ref} from 'vue';//写上onMounted VUE3.0 set
 import axios from 'axios';
 import {message} from "ant-design-vue";
 import {Tool} from "@/util/tool";
+import {useRoute} from "vue-router";
 
 export default defineComponent({
   name: 'AdminDoc',
   setup() {
+    const  route = useRoute()
+    console.log("路由:", route);
+    console.log( "route.path: ", route.path);
+    console.log("route.query: ", route.query);
+    console.log( "route.param: ", route.params);
+    console.log( "route.fu11Path: ", route.fullPath);
+    console.log( "route.name: ", route.name );
+    console.log( "route.meta: ", route.meta);
     const param = ref();
     param.value = {};
     const docs = ref();//响应式数据 获取的书籍实时反馈到页面上
@@ -236,7 +245,9 @@ export default defineComponent({
      */
     const add = () =>{
       modalVisible .value = true;
-      doc.value={};
+      doc.value={
+        ebookId:route.query.ebookId
+      };
 
       treeSelectData.value=Tool.copy(level1.value);
       //为选择树添加一个“无”
