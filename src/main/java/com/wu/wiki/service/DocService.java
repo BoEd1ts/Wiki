@@ -17,10 +17,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import java.util.List;
-
+@RestController
 
 @Service
 public class DocService {
@@ -95,6 +96,13 @@ public class DocService {
     public void delete(Long id){
         //删除指定id的数据
         docMapper.deleteByPrimaryKey(id);
+    }
+    public void delete(List<String> ids){
+        DocExample docExample = new DocExample();
+        DocExample.Criteria criteria = docExample.createCriteria();
+        criteria.andIdIn(ids);
+        docMapper.deleteByExample(docExample);
 
     }
+
 }
