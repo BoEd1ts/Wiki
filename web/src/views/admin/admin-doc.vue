@@ -23,12 +23,14 @@
           </p>
           <!--列,key id,数据doc,分页,等待框,分页执行方法-->
           <a-table
+              v-if="level1.length >0"
               :columns="columns"
               :row-key="record=>record.id"
               :data-source="level1"
               :loading="loading"
               :pagination="false"
               size="small"
+              :defaultExpandAllRows="true"
           >
             <template #name="{text,record}">
               {{record.sort}} {{text}}
@@ -149,6 +151,7 @@ export default defineComponent({
     ];
 
     const level1 = ref(); //一级分类树，children就是二级分类
+    level1.value=[];
 
     /**
      * 数据查询
