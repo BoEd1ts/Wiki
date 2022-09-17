@@ -3,7 +3,7 @@
     <a-layout-content
         :style="{ background: '#fff', padding: '24px', margin: 0, minHeight: '80px'  }"
     >
-      <a-row>
+      <a-row :gutter="24">
         <a-col :span="8">
           <p>
             <a-form layout="inline" :model="param">
@@ -28,13 +28,14 @@
               :data-source="level1"
               :loading="loading"
               :pagination="false"
+              size="small"
           >
-            <template #cover="{text:cover}">
-              <img class="img-wh" v-if="cover" :src="cover" alt="avatar"/> <!--渲染图片-->
+            <template #name="{text,record}">
+              {{record.sort}} {{text}}
             </template>
             <template v-slot:action="{ text, record }">
               <a-space size="small">
-                <a-button type="primary" @click="edit(record)">
+                <a-button type="primary" @click="edit(record)" size="small">
                   编辑
                 </a-button>
                 <a-popconfirm
@@ -44,7 +45,7 @@
                     @confirm="handleDelete(record.id)"
                     @cancel="cancel"
                 >
-                  <a-button type="primary" >
+                  <a-button type="primary" size="small">
                     删除
                   </a-button>
                 </a-popconfirm>
@@ -53,12 +54,22 @@
           </a-table>
         </a-col>
         <a-col :span="16">
+          <p>
+            <a-form layout="inline" :model="param">
+              <a-form-item>
+                <a-button type="primary" @click="handleSave">
+                  保存
+                </a-button>
+              </a-form-item>
+
+            </a-form>
+          </p>
           <!--弹出电子书-->
-          <a-form :model="doc" :label-col="{ span: 6 }" :wrapper-col="{ span: 18 }">
-            <a-form-item label="名称">
-              <a-input v-model:value="doc.name"/>
+          <a-form :model="doc" layout="vertical">
+            <a-form-item>
+              <a-input v-model:value="doc.name" placeholder="名称"/>
             </a-form-item>
-            <a-form-item label="父文档">
+            <a-form-item>
               <a-tree-select
                   v-model:value="doc.parent"
                   style="width: 100%"
@@ -72,10 +83,10 @@
             </a-form-item>
             <!--下拉菜单-->
 
-            <a-form-item label="顺序">
-              <a-input v-model:value="doc.sort"/>
+            <a-form-item>
+              <a-input v-model:value="doc.sort" placeholder="顺序"/>
             </a-form-item>
-            <a-form-item label="内容">
+            <a-form-item>
               <div id="content"></div>
             </a-form-item>
           </a-form>
@@ -128,15 +139,7 @@ export default defineComponent({
       {
         title: '名称',
         dataIndex: 'name',
-      },
-      {
-        title: '父分类',
-        key: 'parent',
-        dataIndex: 'parent',
-      },
-      {
-        title: '顺序',
-        dataIndex: 'sort',
+        slots: {customRender: 'name'}
       },
       {
         title: 'Action',
@@ -182,8 +185,10 @@ export default defineComponent({
     const modalVisible = ref(false);
     const modalLoading = ref(false);
     const editor = new E('#content');
+    editor.config.zIndex=0;
 
-    const handleModalOk = () => {
+
+    const handleSave = () => {
       modalLoading.value = true;
       axios.post("/doc/save",doc.value).then((response) => {
         modalLoading.value=false;
@@ -274,9 +279,7 @@ export default defineComponent({
 
       //为选择树添加一个“无”
       treeSelectData.value.unshift({id:0,name:'无'});
-      setTimeout(function (){
-        editor.create();
-      },100);
+
     };
     /**
      * 添加
@@ -290,9 +293,7 @@ export default defineComponent({
       treeSelectData.value=Tool.copy(level1.value);
       //为选择树添加一个“无”
       treeSelectData.value.unshift({id:0,name:'无'});
-      setTimeout(function (){
-        editor.create();
-      },100);
+
     };
 
 
@@ -314,6 +315,8 @@ export default defineComponent({
     onMounted(() => {
       handleQuery();
 
+      editor.create()
+
     });
 
     return {
@@ -332,7 +335,7 @@ export default defineComponent({
       doc,
       modalVisible,
       modalLoading,
-      handleModalOk,
+      handleSave,
       treeSelectData
     }
   }
