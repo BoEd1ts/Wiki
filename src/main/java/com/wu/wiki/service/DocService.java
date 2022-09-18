@@ -118,5 +118,10 @@ public class DocService {
         docMapper.deleteByExample(docExample);
 
     }
+    public String findcontend(Long id){
+        //删除指定id的数据
+        Content content = contentMapper.selectByPrimaryKey(id);
+        return content.getContent();
+    }
 
 }

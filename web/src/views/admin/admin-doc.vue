@@ -273,11 +273,28 @@ export default defineComponent({
     };
 
     /**
+     * 内容查询
+     **/
+    const handleQueryContent = () => {
+      axios.get("/doc/find-contend/"+doc.value.id).then((response) => {
+        loading.value = false;
+        const data = response.data;
+        if(data.success){
+          editor.txt.html(data.content)
+        }else {
+          message.error(data.success);
+        }
+      });
+    };
+
+
+    /**
      * 编辑
      */
     const edit = ( record:any ) =>{
       modalVisible .value = true;
       doc.value = Tool.copy(record);
+      handleQueryContent();
       //不能选择当前节点及其所有子节点作为父节点，会使树断开
       treeSelectData.value=Tool.copy(level1.value);
       setDisable(treeSelectData.value,record.id);

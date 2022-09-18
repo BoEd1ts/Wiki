@@ -49,5 +49,12 @@ public class DocControl {
         docService.delete(list);
         return resp;
     }
+    @RequestMapping("/find-contend/{id}")  //接口支持所有的请求方式
+    public CommonResp findcontend(@PathVariable Long id) {
+        CommonResp<String> resp = new CommonResp<>();
+        String content = docService.findcontend(id);
+        resp.setContent(content);
+        return resp;
+    }
 
 }
