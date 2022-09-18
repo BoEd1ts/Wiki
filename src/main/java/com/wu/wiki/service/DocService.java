@@ -4,8 +4,10 @@ package com.wu.wiki.service;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.wu.wiki.aspect.LogAspect;
+import com.wu.wiki.domain.Content;
 import com.wu.wiki.domain.Doc;
 import com.wu.wiki.domain.DocExample;
+import com.wu.wiki.mapper.ContentMapper;
 import com.wu.wiki.mapper.DocMapper;
 import com.wu.wiki.req.DocQueryReq;
 import com.wu.wiki.req.DocSaveReq;
@@ -27,6 +29,10 @@ import java.util.List;
 public class DocService {
     @Resource
     private DocMapper docMapper;
+
+    @Resource
+    private ContentMapper contentMapper;
+
 
     @Resource
     private SnowFlake snowFlake;
@@ -80,13 +86,21 @@ public class DocService {
      */
     public void save(DocSaveReq req){
         Doc doc=CopyUtil.copy(req,Doc.class);
+        Content content=CopyUtil.copy(req, Content.class);
         if(ObjectUtils.isEmpty(doc.getId())){
             //新增
             doc.setId(snowFlake.nextId());
             docMapper.insert(doc);
+
+            content.setId(doc.getId());
+            contentMapper.insert(content);
         }else{
             //更新
-            docMapper.updateByPrimaryKey(doc);
+            docMapper.updateByPrimaryKey(doc); //updateByPrimaryKey没有大字段的操作
+            int count = contentMapper.updateByPrimaryKeyWithBLOBs(content);//updateByPrimaryKeyWithBLOBs包含全部字段包含大字段的操作
+            if (count==0){
+                contentMapper.insert(content);
+            }
         }
     }
 
