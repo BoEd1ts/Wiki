@@ -122,7 +122,12 @@ public class DocService {
     public String findcontend(Long id){
         //删除指定id的数据
         Content content = contentMapper.selectByPrimaryKey(id);
-        return content.getContent();
+        if (ObjectUtils.isEmpty(content)){
+            return "";
+        }else {
+            return content.getContent();
+        }
+
     }
 
 }
