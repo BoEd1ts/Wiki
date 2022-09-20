@@ -170,4 +170,12 @@ export default defineComponent({
   width: 100%;
   height: 400px;
 }
+
+/*和antdv p 冲突 覆盖掉  !important让这个样式优先级提到最高*/
+.wangeditor blockquote p{
+  font-family: "YouYuan";
+  margin: 20px 10px !important;
+  font-size: 16px !important;
+  font-weight: 600;
+}
 </style>
