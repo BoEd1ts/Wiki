@@ -160,7 +160,7 @@ export default defineComponent({
       loading.value = true;
       //如果不清空现有数据，则编辑保存重新加载数据后，再点编辑会显示原来数据
       level1.value=[];//清空现有数据
-      axios.get("/doc/all").then((response) => {
+      axios.get("/doc/all"+ route.query.ebookId).then((response) => {
         loading.value = false;
         const data = response.data;
         if(data.success){
