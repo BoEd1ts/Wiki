@@ -6,7 +6,7 @@
           <a-tree
             v-if="level1.length>0"
             :tree-data="level1"
-            @select="onselect"
+            @select="onSelect"
             :replaceFields="{title:'name',key:'id',value:'id'}"
             :defaultExoandAll="true"
           >
@@ -14,7 +14,7 @@
           </a-tree>
         </a-col>
         <a-col :span="18">
-
+          <div :innerHTML="html"></div>
         </a-col>
       </a-row>
     </a-layout-content>
@@ -34,6 +34,8 @@ export default defineComponent({
   setup() {
     const  route = useRoute()
     const docs = ref();
+    const html =ref();
+
 
     const level1 = ref(); //一级分类树，children就是二级分类
     level1.value=[];
@@ -57,6 +59,28 @@ export default defineComponent({
     };
 
 
+    /**
+     * 内容查询
+     **/
+    const handleQueryContent = (id:number) => {
+      axios.get("/doc/find-contend/"+id).then((response) => {
+        const data = response.data;
+        if(data.success){
+          html.value=data.content
+        }else {
+          message.error(data.success);
+        }
+      });
+    };
+
+    const onSelect = (selectedKeys:any,info:any) =>{
+      console.log('selected',selectedKeys,info);
+      if (Tool.isNotEmpty(selectedKeys)){
+        //加载内容
+        handleQueryContent(selectedKeys[0]);
+      }
+    }
+
 
     onMounted(() => {
       handleQuery();
@@ -64,6 +88,8 @@ export default defineComponent({
 
     return {
       level1,
+      html,
+      onSelect
     }
   }
 });

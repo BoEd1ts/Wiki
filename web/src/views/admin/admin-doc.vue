@@ -175,7 +175,7 @@ export default defineComponent({
         level1.value=Tool.array2Tree(docs.value,0);
           console.log("树形结构：",level1);
         //父文档下拉初始化，相当于点击新增
-          treeSelectData.value=Tool.copy(level1.value);
+          treeSelectData.value=Tool.copy(level1.value) || [];
         //为选择树添加一个无
           treeSelectData.value.unshift({id:0,name:'无'});
         }else {
@@ -187,7 +187,7 @@ export default defineComponent({
 
     //--------------表单----------------------
     const doc=ref();
-    doc.value={};
+    doc.value={ebookId:route.query.ebookId};
     const modalVisible = ref(false);
     const modalLoading = ref(false);
     const editor = new E('#content');
@@ -319,7 +319,7 @@ export default defineComponent({
         ebookId:route.query.ebookId
       };
 
-      treeSelectData.value=Tool.copy(level1.value);
+      treeSelectData.value=Tool.copy(level1.value) || [];
       //为选择树添加一个“无”
       treeSelectData.value.unshift({id:0,name:'无'});
 
