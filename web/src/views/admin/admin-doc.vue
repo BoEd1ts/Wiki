@@ -135,6 +135,9 @@ export default defineComponent({
     const docs = ref();//响应式数据 获取的书籍实时反馈到页面上
 
     const loading = ref(false);
+    //因为树选择组件的属性状态，会随着当前节点编辑的节点而变化  所以单独声明
+    const treeSelectData  =ref();
+    treeSelectData.value=[];
 
 
     const columns = [
@@ -160,7 +163,7 @@ export default defineComponent({
       loading.value = true;
       //如果不清空现有数据，则编辑保存重新加载数据后，再点编辑会显示原来数据
       level1.value=[];//清空现有数据
-      axios.get("/doc/all"+ route.query.ebookId).then((response) => {
+      axios.get("/doc/all/"+ route.query.ebookId).then((response) => {
         loading.value = false;
         const data = response.data;
         if(data.success){
@@ -171,8 +174,10 @@ export default defineComponent({
         level1.value=[];
         level1.value=Tool.array2Tree(docs.value,0);
           console.log("树形结构：",level1);
-
-
+        //父文档下拉初始化，相当于点击新增
+          treeSelectData.value=Tool.copy(level1.value);
+        //为选择树添加一个无
+          treeSelectData.value.unshift({id:0,name:'无'});
         }else {
           message.error(data.success);
         }
@@ -181,9 +186,6 @@ export default defineComponent({
 
 
     //--------------表单----------------------
-    //因为树选择组件的属性状态，会随当前编辑的节点而变化，所以单独声明一个响应式变量
-    const treeSelectData = ref();
-    treeSelectData.value=[];
     const doc=ref();
     doc.value={};
     const modalVisible = ref(false);

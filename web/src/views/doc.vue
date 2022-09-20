@@ -43,7 +43,7 @@ export default defineComponent({
      **/
     const handleQuery = () => {
 
-      axios.get("/doc/all"+ route.query.ebookId).then((response) => {
+      axios.get("/doc/all/"+ route.query.ebookId).then((response) => {
         const data = response.data;
         if(data.success){
           docs.value = data.content;
