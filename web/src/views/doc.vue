@@ -9,6 +9,7 @@
             @select="onSelect"
             :replaceFields="{title:'name',key:'id',value:'id'}"
             :defaultExoandAll="true"
+            ：defaultSelectedKeys="defaultSelectedKeys"
           >
 
           </a-tree>
@@ -35,28 +36,12 @@ export default defineComponent({
     const  route = useRoute()
     const docs = ref();
     const html =ref();
+    const defaultSelectedKeys = ref();
+    defaultSelectedKeys.value=[];
 
 
     const level1 = ref(); //一级分类树，children就是二级分类
     level1.value=[];
-
-    /**
-     * 数据查询
-     **/
-    const handleQuery = () => {
-
-      axios.get("/doc/all/"+ route.query.ebookId).then((response) => {
-        const data = response.data;
-        if(data.success){
-          docs.value = data.content;
-
-          level1.value=[];
-          level1.value=Tool.array2Tree(docs.value,0);
-        }else {
-          message.error(data.success);
-        }
-      });
-    };
 
 
     /**
@@ -72,6 +57,31 @@ export default defineComponent({
         }
       });
     };
+
+    /**
+     * 数据查询
+     **/
+    const handleQuery = () => {
+
+      axios.get("/doc/all/"+ route.query.ebookId).then((response) => {
+        const data = response.data;
+        if(data.success){
+          docs.value = data.content;
+
+          level1.value=[];
+          level1.value=Tool.array2Tree(docs.value,0);
+
+          if (Tool.isNotEmpty(level1)){
+            defaultSelectedKeys.value=[level1.value[0].id]
+            handleQueryContent(level1.value[0].id)
+          }
+        }else {
+          message.error(data.success);
+        }
+      });
+    };
+
+
 
     const onSelect = (selectedKeys:any,info:any) =>{
       console.log('selected',selectedKeys,info);
@@ -89,7 +99,8 @@ export default defineComponent({
     return {
       level1,
       html,
-      onSelect
+      onSelect,
+      defaultSelectedKeys
     }
   }
 });
