@@ -193,7 +193,7 @@ export default defineComponent({
 
     //--------------表单----------------------
     const doc=ref();
-    doc.value={ebookId:route.query.ebookId};
+    doc.value={ebookId:route.query.ebookId}; //初始打开文档管理页面，直接新增文档时，会报错:电子书不能;为空
     const modalVisible = ref(false);
     const modalLoading = ref(false);
     const editor = new E('#content');
