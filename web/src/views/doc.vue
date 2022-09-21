@@ -32,7 +32,7 @@ import {useRoute} from "vue-router";
 import E from 'wangeditor';
 
 export default defineComponent({
-  name: 'doc',
+  name: 'Doc',
   setup() {
     const  route = useRoute()
     const docs = ref();
