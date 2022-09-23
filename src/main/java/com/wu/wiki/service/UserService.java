@@ -10,6 +10,7 @@ import com.wu.wiki.exception.BusinessException;
 import com.wu.wiki.exception.BusinessExceptionCode;
 import com.wu.wiki.mapper.UserMapper;
 import com.wu.wiki.req.UserQueryReq;
+import com.wu.wiki.req.UserResetPasswordReq;
 import com.wu.wiki.req.UserSaveReq;
 import com.wu.wiki.resp.PageResp;
 import com.wu.wiki.resp.UserQueryResp;
@@ -105,6 +106,14 @@ public class UserService {
             return userList.get(0);
 
         }
+    }
+
+    /**
+     * 修改密码
+     */
+    public void resetPassword(UserResetPasswordReq req){
+        User user=CopyUtil.copy(req,User.class);
+        userMapper.updateByPrimaryKeySelective(user);
     }
 
 
