@@ -1,10 +1,12 @@
 package com.wu.wiki.controller;
 
+import com.wu.wiki.req.UserLoginReq;
 import com.wu.wiki.req.UserQueryReq;
 import com.wu.wiki.req.UserResetPasswordReq;
 import com.wu.wiki.req.UserSaveReq;
 import com.wu.wiki.resp.CommonResp;
 import com.wu.wiki.resp.PageResp;
+import com.wu.wiki.resp.UserLoginResp;
 import com.wu.wiki.resp.UserQueryResp;
 import com.wu.wiki.service.UserService;
 import org.springframework.util.DigestUtils;
@@ -48,6 +50,14 @@ public class UserControl {
         req.setPassword(DigestUtils.md5DigestAsHex(req.getPassword().getBytes()));
         CommonResp resp = new CommonResp();
         userService.resetPassword(req);
+        return resp;
+    }
+    @PostMapping("/login")
+    public CommonResp login(@Valid @RequestBody UserLoginReq req){
+        req.setPassword(DigestUtils.md5DigestAsHex(req.getPassword().getBytes()));
+        CommonResp <UserLoginResp>resp = new CommonResp();
+        UserLoginResp userLoginResp = userService.login(req);
+        resp.setContent(userLoginResp);
         return resp;
     }
 }
