@@ -2,44 +2,68 @@ package com.wu.wiki.controller;
 
 import com.wu.wiki.domain.Test;
 import com.wu.wiki.service.TestService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
-//@Controller  返回页面 @RestController 是返回字符串的
-@RestController  //@ResponseBody用来返回字符串或JSON对象 大多是JSON对象
+@RestController
 public class TestControl {
 
-    @Value("${this.hello:test33}")
-    private String hello;//获取配置文件的自定义配置  读不到就会选择后面的默认值
+    private static final Logger LOG = LoggerFactory.getLogger(TestControl.class);
+
+    @Value("${test.hello:TEST}")
+    private String testHello;
 
     @Resource
     private TestService testService;
 
-    /*
-    * GET ,POST,PUT,DELETE
-    * */
-    /*@GetMapping("/hello")
-    @PostMapping("/hello")
-    @DeleteMapping()
-    @RequestMapping(value = "/hello",method = RequestMethod.GET)
-    @RequestMapping(value = "/hello",method = RequestMethod.POST)....*/
-    @RequestMapping(value = "/hello")  //访问的接口路径 表示这个接口支持所有的请求方式
-    public String hello(){
-        return "Hello World"+hello;
+    @Resource
+    private RedisTemplate redisTemplate;
+
+    /**
+     * GET, POST, PUT, DELETE
+     *
+     * /user?id=1
+     * /user/1
+     * @return
+     */
+    // @PostMapping
+    // @PutMapping
+    // @DeleteMapping
+    // @RequestMapping(value = "/user/1", method = RequestMethod.GET)
+    // @RequestMapping(value = "/user/1", method = RequestMethod.DELETE)
+    @GetMapping("/hello")
+    public String hello() {
+        return "Hello World!" + testHello;
     }
 
     @PostMapping("/hello/post")
-    public String helloPost(String name){
-        return "Hello World"+name;
+    public String helloPost(String name) {
+        return "Hello World! Post，" + name;
     }
 
-    @RequestMapping("/test/list")  //接口支持所有的请求方式
-    public List<Test> list(){
+    @GetMapping("/test/list")
+    public List<Test> list() {
         return testService.list();
+    }
+
+    @RequestMapping("/redis/set/{key}/{value}")
+    public String set(@PathVariable Long key, @PathVariable String value) {
+        redisTemplate.opsForValue().set(key, value, 3600, TimeUnit.SECONDS);
+        LOG.info("key: {}, value: {}", key, value);
+        return "success";
+    }
+
+    @RequestMapping("/redis/get/{key}")
+    public Object get(@PathVariable Long key) {
+        Object object = redisTemplate.opsForValue().get(key);
+        LOG.info("key: {}, value: {}", key, object);
+        return object;
     }
 }
