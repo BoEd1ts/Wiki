@@ -27,6 +27,17 @@
         <a class="login-menu" v-show="user.id">
           <span>您好：{{user.name}}</span>
         </a>
+        <a-popconfirm
+            title="确认退出登入"
+            ok-text="是"
+            cancel-text="否"
+            @confirm="logout()"
+        >
+          <a class="login-menu" v-show="user.id">
+            <span>退出登入</span>
+          </a>
+        </a-popconfirm>
+
         <a class="login-menu" v-show="!user.id" @click="showLoginModal">
           <span>登入</span>
         </a>
@@ -61,9 +72,7 @@ declare let KEY:any;
 export default defineComponent({
   name: 'the-header',
   setup () {
-
     const user = computed(() => store.state.user);
-
 
     const loginUser = ref({
       loginName: "rose",
@@ -87,8 +96,22 @@ export default defineComponent({
           loginModalVisible.value = false;
           message.success("登录成功！");
 
-          store.commit("setUser",user.value)
+          store.commit("setUser",data.content)
 
+        } else {
+          message.error(data.message);
+        }
+      });
+    };
+
+    // 退出登录
+    const logout = () => {
+      console.log("退出登入开始");
+      axios.get('/user/logout/'+ user.value.token).then((response) => {
+        const data = response.data;
+        if (data.success) {
+          message.success("退出登录成功！");
+          store.commit("setUser", {});
         } else {
           message.error(data.message);
         }
@@ -103,7 +126,8 @@ export default defineComponent({
       showLoginModal,
       loginUser,
       login,
-      user
+      user,
+      logout
     }
   }
 });
