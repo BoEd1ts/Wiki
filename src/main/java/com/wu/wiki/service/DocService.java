@@ -9,6 +9,7 @@ import com.wu.wiki.domain.Doc;
 import com.wu.wiki.domain.DocExample;
 import com.wu.wiki.mapper.ContentMapper;
 import com.wu.wiki.mapper.DocMapper;
+import com.wu.wiki.mapper.DocMapperCust;
 import com.wu.wiki.req.DocQueryReq;
 import com.wu.wiki.req.DocSaveReq;
 import com.wu.wiki.resp.DocQueryResp;
@@ -32,6 +33,8 @@ public class DocService {
 
     @Resource
     private ContentMapper contentMapper;
+    @Resource
+    private DocMapperCust docMapperCust;
 
 
     @Resource
@@ -91,6 +94,8 @@ public class DocService {
         if(ObjectUtils.isEmpty(doc.getId())){
             //新增
             doc.setId(snowFlake.nextId());
+            doc.setViewCount(0);
+            doc.setVoteCount(0);
             docMapper.insert(doc);
 
             content.setId(doc.getId());
@@ -120,8 +125,9 @@ public class DocService {
 
     }
     public String findcontend(Long id){
-        //删除指定id的数据
         Content content = contentMapper.selectByPrimaryKey(id);
+        //文档阅读数加1
+        docMapperCust.increaseViewCount(id);
         if (ObjectUtils.isEmpty(content)){
             return "";
         }else {
