@@ -4,6 +4,8 @@ package com.wu.wiki.service;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.wu.wiki.aspect.LogAspect;
+import com.wu.wiki.controller.BusinessException;
+import com.wu.wiki.controller.BusinessExceptionCode;
 import com.wu.wiki.domain.Content;
 import com.wu.wiki.domain.Doc;
 import com.wu.wiki.domain.DocExample;
@@ -15,6 +17,8 @@ import com.wu.wiki.req.DocSaveReq;
 import com.wu.wiki.resp.DocQueryResp;
 import com.wu.wiki.resp.PageResp;
 import com.wu.wiki.utils.CopyUtil;
+import com.wu.wiki.utils.RedisUtil;
+import com.wu.wiki.utils.RequestContext;
 import com.wu.wiki.utils.SnowFlake;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,15 +34,14 @@ import java.util.List;
 public class DocService {
     @Resource
     private DocMapper docMapper;
-
     @Resource
     private ContentMapper contentMapper;
     @Resource
     private DocMapperCust docMapperCust;
-
-
     @Resource
     private SnowFlake snowFlake;
+    @Resource
+    private RedisUtil redisUtil;
     private final static Logger LOG = LoggerFactory.getLogger(LogAspect.class);
 
     public List<DocQueryResp> all(Long ebookId){
@@ -135,8 +138,25 @@ public class DocService {
         }
 
     }
-    public void vote(Long id){
-        docMapperCust.increaseViewCount(id);
+
+    /**
+     * 点赞
+     */
+    public void vote(Long id) {
+        // docMapperCust.increaseVoteCount(id);
+        // 远程IP+doc.id作为key，24小时内不能重复
+        String ip = RequestContext.getRemoteAddr();
+        if (redisUtil.validateRepeat("DOC_VOTE_" + id + "_" + ip, 5000)) {
+            docMapperCust.increaseVoteCount(id);
+        } else {
+            throw new BusinessException(BusinessExceptionCode.VOTE_REPEAT);
+        }
+
+        // 推送消息
+//        Doc docDb = docMapper.selectByPrimaryKey(id);
+//        String logId = MDC.get("LOG_ID");
+//        wsService.sendInfo("【" + docDb.getName() + "】被点赞！", logId);
+        // rocketMQTemplate.convertAndSend("VOTE_TOPIC", "【" + docDb.getName() + "】被点赞！");
     }
 
 }
