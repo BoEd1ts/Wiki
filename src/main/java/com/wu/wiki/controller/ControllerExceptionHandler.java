@@ -1,6 +1,5 @@
 package com.wu.wiki.controller;
 
-import com.wu.wiki.exception.BusinessException;
 import com.wu.wiki.resp.CommonResp;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,7 +11,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 /**
  * 统一异常处理、数据预处理等
  */
-@ControllerAdvice//对Controller做一些统一异常处理
+@ControllerAdvice//对Controller做一些异常处理，或数据预处理
 public class ControllerExceptionHandler {
 
     private static final Logger LOG = LoggerFactory.getLogger(ControllerExceptionHandler.class);
@@ -22,7 +21,7 @@ public class ControllerExceptionHandler {
      * @param e
      * @return
      */
-    @ExceptionHandler(value = BindException.class)//针对性对Bind这个做异常做处理 进到这个方法里面来
+    @ExceptionHandler(value = BindException.class)
     @ResponseBody
     public CommonResp validExceptionHandler(BindException e) {
         CommonResp commonResp = new CommonResp();
@@ -33,7 +32,7 @@ public class ControllerExceptionHandler {
     }
 
     /**
-     * 校验异常统一处理
+     * 校验异常统一处理s
      * @param e
      * @return
      */

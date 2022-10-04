@@ -38,9 +38,17 @@
         <template #renderItem="{ item }">
           <a-list-item key="item.title">
             <template #actions>
-          <span v-for="{ type, text } in actions" :key="type">
-            <component v-bind:is="type" style="margin-right: 8px" />
-            {{ text }}
+          <span>
+            <component v-bind:is="'FileOutlined'" style="margin-right: 8px" />
+            {{ item.docCount }}
+          </span>
+          <span>
+            <component v-bind:is="'UserOutlined'" style="margin-right: 8px" />
+            {{ item.viewCount }}
+          </span>
+          <span>
+            <component v-bind:is="'LikeOutlined'" style="margin-right: 8px" />
+            {{ item.voteCount }}
           </span>
             </template>
 
@@ -151,18 +159,17 @@ export default defineComponent({
       },
       pageSize: 3,
     };
-    const actions:any = [
-      { type: 'StarOutlined', text: '156' },
-      { type: 'LikeOutlined', text: '156' },
-      { type: 'MessageOutlined', text: '2' },
-    ];
+    // const actions:any = [
+    //   { type: 'StarOutlined', text: '156' },
+    //   { type: 'LikeOutlined', text: '156' },
+    //   { type: 'MessageOutlined', text: '2' },
+    // ];
 
 
     return{
       ebooks,
       listData,
       pagination,
-      actions,
 
       handleClick,
       level1,
