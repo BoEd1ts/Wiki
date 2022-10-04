@@ -4,4 +4,7 @@
     <select id="increaseViewCount" >
         update doc set view_count = view_count + 1 where id = #{id};
     </select>
+    <select id="increaseVoteCount" >
+        update doc set vote_count = vote_count + 1 where id = #{id};
+    </select>
 </mapper>

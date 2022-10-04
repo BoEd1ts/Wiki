@@ -56,5 +56,11 @@ public class DocControl {
         resp.setContent(content);
         return resp;
     }
+    @GetMapping("/vote/{id}")
+    public CommonResp vote(@PathVariable Long id){
+        CommonResp commonResp = new CommonResp();
+        docService.vote(id);
+        return commonResp;
+    }
 
 }
