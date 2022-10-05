@@ -20,7 +20,6 @@ import com.wu.wiki.utils.CopyUtil;
 import com.wu.wiki.utils.RedisUtil;
 import com.wu.wiki.utils.RequestContext;
 import com.wu.wiki.utils.SnowFlake;
-import com.wu.wiki.websocket.WebSocketServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -43,8 +42,9 @@ public class DocService {
     private SnowFlake snowFlake;
     @Resource
     private RedisUtil redisUtil;
+
     @Resource
-    private WebSocketServer webSocketServer;
+    private WsService wsService;
     private final static Logger LOG = LoggerFactory.getLogger(LogAspect.class);
 
     public List<DocQueryResp> all(Long ebookId){
@@ -156,10 +156,9 @@ public class DocService {
         }
         //推送消息
         Doc docDb = docMapper.selectByPrimaryKey(id);
-        webSocketServer.sendInfo("【"+docDb.getName()+"】被点赞！");
-
-
+        wsService.sendInfo("【"+docDb.getName()+"】被点赞！");
     }
+
     public void updateEbookInfo(){
         docMapperCust.updateEbookInfo();
     }

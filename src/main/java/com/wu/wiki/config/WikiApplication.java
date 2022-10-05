@@ -8,12 +8,14 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.core.env.Environment;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 @ComponentScan("com.wu") //指定路径 @ComponentScan({"com.wu","com.test"}) 就可以扫描多个包
 @SpringBootApplication
 @MapperScan("com.wu.wiki.mapper")//使SpringBoot知道持久层（sql）是哪个
 @EnableScheduling
+@EnableAsync
 public class WikiApplication {
     //LOG作用LoggerFactory.getLogger可以在IDE控制台打印日志,便于开发,一般加在代码最上面
     private static final Logger LOG= LoggerFactory.getLogger(WikiApplication.class);
